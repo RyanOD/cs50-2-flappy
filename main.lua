@@ -31,12 +31,20 @@ function love.load()
     fulscreen = false,
     resizable = true
   } )
+
+  -- Declare keysPressed table to store keys pressed by user
+  love.keyboard.keysPressed = {}
 end
 
 function love.update( dt )
   -- Use modulo here since when backgroundScroll equals 413, modulo will equal 0
   backgroundScroll = ( backgroundScroll + BACKGROUND_SCROLL_SPEED * dt ) % BACKGROUND_LOOPING_POINT
   groundScroll = ( groundScroll + GROUND_SCROLL_SPEED * dt ) % GROUND_LOOPING_POINT
+
+  bird:update( dt )
+
+  -- Reset keysPressed table
+  love.keyboard.keysPressed = {}
 end
 
 function love.resize( w, h )
@@ -44,9 +52,20 @@ function love.resize( w, h )
 end
 
 function love.keypressed( key )
+  -- Store keys pressed in keysPressed table as true
+  love.keyboard.keysPressed[key] = true
+
   if key == 'escape' then
     love.event.quit()
   end
+end
+
+-- Function to check keysPressed table for key values
+function love.keyboard.wasPressed( key )
+  if love.keyboard.keysPressed[key] then
+    return true
+  end
+  return false
 end
 
 function love.draw()
