@@ -2,6 +2,7 @@ push = require 'push'
 Class = require 'class'
 
 require 'Bird'
+require 'Pipe'
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -15,12 +16,15 @@ BACKGROUND_LOOPING_POINT = 413
 GROUND_SCROLL_SPEED = 60
 GROUND_LOOPING_POINT = 560
 
+GROUND_HEIGHT = 16
+
 local background = love.graphics.newImage( 'images/background.png' )
 local backgroundScroll = 0
 local ground = love.graphics.newImage( 'images/ground.png' )
 local groundScroll = 0
 
 local bird = Bird()
+local pipe = Pipe()
 
 function love.load()
   love.graphics.setDefaultFilter( 'nearest', 'nearest' )
@@ -42,8 +46,8 @@ function love.update( dt )
   groundScroll = ( groundScroll + GROUND_SCROLL_SPEED * dt ) % GROUND_LOOPING_POINT
 
   bird:update( dt )
-
-  -- Reset keysPressed table
+  pipe.x = pipe.x - 60*dt
+  -- Reset keysPressed table by flushing all entries
   love.keyboard.keysPressed = {}
 end
 
@@ -71,7 +75,8 @@ end
 function love.draw()
   push:start()
     love.graphics.draw( background, -backgroundScroll, 0 )
-    love.graphics.draw( ground, -groundScroll, VIRTUAL_HEIGHT - 16 )
+    pipe:render()
+    love.graphics.draw( ground, -groundScroll, VIRTUAL_HEIGHT - GROUND_HEIGHT )
     bird:render()
   push:finish()
 end
