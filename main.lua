@@ -18,6 +18,8 @@ GROUND_LOOPING_POINT = 560
 
 GROUND_HEIGHT = 16
 
+math.randomseed( os.time() )
+
 local background = love.graphics.newImage( 'images/background.png' )
 local backgroundScroll = 0
 local ground = love.graphics.newImage( 'images/ground.png' )
@@ -25,6 +27,10 @@ local groundScroll = 0
 
 local bird = Bird()
 local pipe = Pipe()
+
+local pipes = {}
+
+local timer = 0
 
 function love.load()
   love.graphics.setDefaultFilter( 'nearest', 'nearest' )
@@ -46,7 +52,8 @@ function love.update( dt )
   groundScroll = ( groundScroll + GROUND_SCROLL_SPEED * dt ) % GROUND_LOOPING_POINT
 
   bird:update( dt )
-  pipe.x = pipe.x - 60*dt
+  pipe:update( dt )
+
   -- Reset keysPressed table by flushing all entries
   love.keyboard.keysPressed = {}
 end

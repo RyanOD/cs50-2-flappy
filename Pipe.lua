@@ -1,11 +1,18 @@
 Pipe = Class{}
 
-function Pipe:init()
-  self.image = love.graphics.newImage( 'images/pipe.png' )
-  self.gap = 120
+local PIPE_IMAGE = love.graphics.newImage( 'images/pipe.png' )
+local PIPE_SCROLL = -60
+
+function Pipe:init( offset )
+  self.image = PIPE_IMAGE
+  self.gap = 80
   self.width = self.image:getWidth()
-  self.x = VIRTUAL_WIDTH + self.width * 3
-  self.y = 160
+  self.x = VIRTUAL_WIDTH + self.width
+  self.y = math.random( VIRTUAL_HEIGHT / 2, VIRTUAL_HEIGHT / 2 + 50 )
+end
+
+function Pipe:update( dt )
+  self.x = self.x + PIPE_SCROLL * dt
 end
 
 function Pipe:render()
