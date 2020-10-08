@@ -3,6 +3,7 @@ Class = require 'class'
 
 require 'Bird'
 require 'Pipe'
+require 'Pipes'
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -28,9 +29,9 @@ local groundScroll = 0
 local bird = Bird()
 local pipe = Pipe()
 
-local pipes = {}
+local pipePairs = {}
 
-local timer = 0
+local spawnTimer = 0
 
 function love.load()
   love.graphics.setDefaultFilter( 'nearest', 'nearest' )
@@ -51,8 +52,21 @@ function love.update( dt )
   backgroundScroll = ( backgroundScroll + BACKGROUND_SCROLL_SPEED * dt ) % BACKGROUND_LOOPING_POINT
   groundScroll = ( groundScroll + GROUND_SCROLL_SPEED * dt ) % GROUND_LOOPING_POINT
 
+  spawnTimer = spawnTimer + dt
+  if spawnTimer > 3 then
+    table.insert( pipePairs, Pipes() )
+    spawnTimer = 0
+  end
+
+  -- Place call to update method in call to pairs...this makes sure all pipes in table get updated
+  for k, pipe in pairs( pipePairs ) do
+    pipe:update( dt )
+    --if pipe.x < -pipe.width then
+      --table.remove( pipePairs, k )
+    --end
+  end
+
   bird:update( dt )
-  pipe:update( dt )
 
   -- Reset keysPressed table by flushing all entries
   love.keyboard.keysPressed = {}
@@ -82,7 +96,10 @@ end
 function love.draw()
   push:start()
     love.graphics.draw( background, -backgroundScroll, 0 )
-    pipe:render()
+    -- Notice calls to Pipe class render() method happens in the love.draw() function
+    for k, pipe in pairs( pipePairs ) do
+      pipe:render()
+    end
     love.graphics.draw( ground, -groundScroll, VIRTUAL_HEIGHT - GROUND_HEIGHT )
     bird:render()
   push:finish()

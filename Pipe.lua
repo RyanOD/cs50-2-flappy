@@ -3,21 +3,24 @@ Pipe = Class{}
 local PIPE_IMAGE = love.graphics.newImage( 'images/pipe.png' )
 local PIPE_SCROLL = -60
 
-function Pipe:init( offset )
+function Pipe:init( orientation, y )
   self.image = PIPE_IMAGE
-  self.gap = 80
   self.width = self.image:getWidth()
   self.x = VIRTUAL_WIDTH + self.width
-  self.y = math.random( VIRTUAL_HEIGHT / 2, VIRTUAL_HEIGHT / 2 + 50 )
+  self.y = y
+  self.orientation = orientation
 end
 
 function Pipe:update( dt )
-  self.x = self.x + PIPE_SCROLL * dt
+  --self.x = self.x + PIPE_SCROLL * dt
 end
 
 function Pipe:render()
-  love.graphics.draw( self.image, self.x, self.y, 0, 1, 1)
-  love.graphics.draw( self.image, self.x, self.y - self.gap, 0, 1, -1)
+  if self.orientation == 'upper' then
+    love.graphics.draw( self.image, self.x, self.y, 0, 1, -1)
+  elseif self.orientation == 'lower' then
+    love.graphics.draw( self.image, self.x, self.y, 0, 1, 1)
+  end
 end
 
 --create instance of Pipe Class
