@@ -34,11 +34,13 @@ function Bird:update( dt )
 end
 
 function Bird:collides( pipe )
-  if self.x + self.width < pipe.x or self.x > pipe.x + pipe.width then
-    return false
-  else
-    if self.y < pipe.y or self.y + self.height >
+  if self.x + self.width - 2 > pipe.x + 2 and self.x + 2 < pipe.x + pipe.width - 2 then
+    if pipe.orientation == 'upper' and self.y < pipe.y then
+      return true
+    elseif pipe.orientation == 'lower' and self.y + self.height > pipe.y then
+      return true
+    end
   end
 
-  return true
+  return false
 end

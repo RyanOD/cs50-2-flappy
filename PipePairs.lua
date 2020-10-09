@@ -1,7 +1,7 @@
 PipePairs = Class{}
 local PIPE_SCROLL = -60
 local PIPE_WIDTH = 70
-local PIPE_GAP = 90
+local PIPE_GAP = 140
 
 function PipePairs:init()
   self.x = VIRTUAL_WIDTH + 32
