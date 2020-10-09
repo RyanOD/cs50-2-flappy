@@ -3,7 +3,7 @@ Class = require 'class'
 
 require 'Bird'
 require 'Pipe'
-require 'Pipes'
+require 'PipePairs'
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -20,6 +20,8 @@ GROUND_LOOPING_POINT = 560
 GROUND_HEIGHT = 16
 
 math.randomseed( os.time() )
+
+local scrolling = true
 
 local background = love.graphics.newImage( 'images/background.png' )
 local backgroundScroll = 0
@@ -54,13 +56,20 @@ function love.update( dt )
 
   spawnTimer = spawnTimer + dt
   if spawnTimer > 3 then
-    table.insert( pipePairs, Pipes() )
+    table.insert( pipePairs, PipePairs() )
     spawnTimer = 0
   end
 
   -- Place call to update method in call to pairs...this makes sure all pipes in table get updated
-  for k, pipe in pairs( pipePairs ) do
-    pipe:update( dt )
+  for k, pipes in pairs( pipePairs ) do
+    if scrolling == true then
+      pipes:update( dt )
+    end
+    for l, pipe in pairs( pipes.pipes ) do
+      if bird:collides( pipe ) then
+        scrolling = false
+      end
+    end
     --if pipe.x < -pipe.width then
       --table.remove( pipePairs, k )
     --end
