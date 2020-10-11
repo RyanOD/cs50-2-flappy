@@ -1,9 +1,20 @@
 push = require 'push'
 Class = require 'class'
 
+-- Class representing the bird
 require 'Bird'
+
+-- Class representing a single pipe object
 require 'Pipe'
+
+-- Class representing a pair of mirroed pipes (two Pipe objects in a table)
 require 'PipePairs'
+
+-- Class representing each finite class state for our game
+require 'StateMachine'
+
+-- Separate file for managing all fonts
+require 'fonts'
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -45,6 +56,12 @@ function love.load()
     resizable = true
   } )
 
+  gStateMachine = StateMachine{
+    ['title'] = function() return TitleScreenState() end
+    ['play'] = function() return PlayState() and
+  }
+  gStateMachine:change( 'title' )
+
   -- Declare keysPressed table to store keys pressed by user
   love.keyboard.keysPressed = {}
 end
@@ -54,43 +71,45 @@ function love.update( dt )
   backgroundScroll = ( backgroundScroll + BACKGROUND_SCROLL_SPEED * dt ) % BACKGROUND_LOOPING_POINT
   groundScroll = ( groundScroll + GROUND_SCROLL_SPEED * dt ) % GROUND_LOOPING_POINT
 
-  spawnTimer = spawnTimer + dt
-  if spawnTimer > 3 then
-    table.insert( pipePairs, PipePairs() )
-    spawnTimer = 0
-  end
+  gStateMachine:update( dt )
 
-  -- Place call to update method in call to pairs...this makes sure all pipes in table get updated
-  for k, pipes in pairs( pipePairs ) do
-    if scrolling == true then
+  if scrolling == true then
+    spawnTimer = spawnTimer + dt
+    if spawnTimer > 3 then
+      table.insert( pipePairs, PipePairs() )
+      spawnTimer = 0
+    end
+
+    -- Place call to update method in call to pairs...this makes sure all pipes in table get updated
+    for k, pipes in pairs( pipePairs ) do
       pipes:update( dt )
-    end
-    for l, pipe in pairs( pipes.pipes ) do
-      if bird:collides( pipe ) then
-        scrolling = false
+      for l, pipe in pairs( pipes.pipes ) do
+        if bird:collides( pipe ) then
+          scrolling = false
+        end
       end
+      --if pipe.x < -pipe.width then
+        --table.remove( pipePairs, k )
+      --end
     end
-    --if pipe.x < -pipe.width then
-      --table.remove( pipePairs, k )
-    --end
+
+    bird:update( dt )
+
+    -- Reset keysPressed table by flushing all entries
+    love.keyboard.keysPressed = {}
   end
 
-  bird:update( dt )
+  function love.resize( w, h )
+    push:resize( w, h )
+  end
 
-  -- Reset keysPressed table by flushing all entries
-  love.keyboard.keysPressed = {}
-end
+  function love.keypressed( key )
+    -- Store keys pressed in keysPressed table as true
+    love.keyboard.keysPressed[key] = true
 
-function love.resize( w, h )
-  push:resize( w, h )
-end
-
-function love.keypressed( key )
-  -- Store keys pressed in keysPressed table as true
-  love.keyboard.keysPressed[key] = true
-
-  if key == 'escape' then
-    love.event.quit()
+    if key == 'escape' then
+      love.event.quit()
+    end
   end
 end
 
@@ -109,6 +128,9 @@ function love.draw()
     for k, pipe in pairs( pipePairs ) do
       pipe:render()
     end
+    
+    gStateMachine:render()
+
     love.graphics.draw( ground, -groundScroll, VIRTUAL_HEIGHT - GROUND_HEIGHT )
     bird:render()
   push:finish()
