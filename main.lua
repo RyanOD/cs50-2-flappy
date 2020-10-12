@@ -1,6 +1,9 @@
 push = require 'push'
 Class = require 'class'
 
+-- Separate file for managing all fonts
+require 'fonts'
+
 -- Class representing the bird
 require 'Bird'
 
@@ -12,9 +15,9 @@ require 'PipePairs'
 
 -- Class representing each finite class state for our game
 require 'StateMachine'
-
--- Separate file for managing all fonts
-require 'fonts'
+require 'states/BaseState'
+require 'states/TitleScreenState'
+require 'states/PlayState'
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -33,18 +36,10 @@ GROUND_HEIGHT = 16
 math.randomseed( os.time() )
 
 local scrolling = true
-
 local background = love.graphics.newImage( 'images/background.png' )
 local backgroundScroll = 0
 local ground = love.graphics.newImage( 'images/ground.png' )
 local groundScroll = 0
-
-local bird = Bird()
-local pipe = Pipe()
-
-local pipePairs = {}
-
-local spawnTimer = 0
 
 function love.load()
   love.graphics.setDefaultFilter( 'nearest', 'nearest' )
@@ -52,13 +47,13 @@ function love.load()
 
   push:setupScreen( VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
     vsync = true,
-    fulscreen = false,
+    fullscreen = false,
     resizable = true
   } )
 
   gStateMachine = StateMachine{
-    ['title'] = function() return TitleScreenState() end
-    ['play'] = function() return PlayState() and
+    ['title'] = function() return TitleScreenState() end,
+    ['play'] = function() return PlayState() end
   }
   gStateMachine:change( 'title' )
 
@@ -74,27 +69,6 @@ function love.update( dt )
   gStateMachine:update( dt )
 
   if scrolling == true then
-    spawnTimer = spawnTimer + dt
-    if spawnTimer > 3 then
-      table.insert( pipePairs, PipePairs() )
-      spawnTimer = 0
-    end
-
-    -- Place call to update method in call to pairs...this makes sure all pipes in table get updated
-    for k, pipes in pairs( pipePairs ) do
-      pipes:update( dt )
-      for l, pipe in pairs( pipes.pipes ) do
-        if bird:collides( pipe ) then
-          scrolling = false
-        end
-      end
-      --if pipe.x < -pipe.width then
-        --table.remove( pipePairs, k )
-      --end
-    end
-
-    bird:update( dt )
-
     -- Reset keysPressed table by flushing all entries
     love.keyboard.keysPressed = {}
   end
@@ -124,14 +98,10 @@ end
 function love.draw()
   push:start()
     love.graphics.draw( background, -backgroundScroll, 0 )
-    -- Notice calls to Pipe class render() method happens in the love.draw() function
-    for k, pipe in pairs( pipePairs ) do
-      pipe:render()
-    end
     
     gStateMachine:render()
 
     love.graphics.draw( ground, -groundScroll, VIRTUAL_HEIGHT - GROUND_HEIGHT )
-    bird:render()
+    --bird:render()
   push:finish()
 end
