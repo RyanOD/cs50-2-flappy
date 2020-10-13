@@ -9,6 +9,7 @@ function Pipe:init(orientation, y)
   self.x = VIRTUAL_WIDTH
   self.y = y
   self.orientation = orientation
+  self.scored = false
 end
 
 function Pipe:render()

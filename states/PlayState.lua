@@ -4,18 +4,22 @@ local PIPE_SCROLL = -160
 local PIPE_WIDTH = 70
 local PIPE_GAP = 140
 
--- PlayState member holds the bird, the pipePairs, and the spawing timer for the game
+-- PlayState member instantiates the bird and pipePairs objects. Also holds the spawing timer for the game.
 function PlayState:init()
   self.bird = Bird()
   self.pipePairs = {}
   self.spawnTimer = 0
   self.scrolling = true
+  self.score = 0
 end
 
 function PlayState:render()
   for k, pipe in pairs(self.pipePairs) do
     pipe:render()
   end
+
+  love.graphics.setFont(mediumFont)
+  love.graphics.printf('Score: ' .. self.score, 0, 100, VIRTUAL_WIDTH, 'center')
 
   self.bird:render()
 end
@@ -36,6 +40,10 @@ function PlayState:update(dt)
 
   -- check every entry in the pipePairs table and move each + check each pipe (upper and lower) for collision
   for k, pair in pairs(self.pipePairs) do
+    if self.bird.x > pair.pipes.lower.x + pair.pipes.lower.width and pair.pipes.lower.scored == false then
+      self.score = self.score + 1
+      pair.pipes.lower.scored = true
+    end
     if pair.remove then
         table.remove(self.pipePairs, k)
     end
