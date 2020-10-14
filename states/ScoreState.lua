@@ -2,6 +2,9 @@ ScoreState = Class{__includes = BaseState}
 
 function ScoreState:enter(params)
   self.score = params.score
+  if self.score > ghighScore then
+    ghighScore = self.score
+  end
 end
 
 function ScoreState:render()
@@ -11,6 +14,7 @@ function ScoreState:render()
   love.graphics.setFont(mediumFont)
   love.graphics.printf('Final Score: ' ..  tostring(self.score), 0, 100, VIRTUAL_WIDTH, 'center')
   love.graphics.printf('Press enter to play again', 0, 130, VIRTUAL_WIDTH, 'center')
+  love.graphics.printf('High Score: ' ..  tostring(ghighScore), 0, 200, VIRTUAL_WIDTH, 'center')
 end
 
 function ScoreState:update(dt)

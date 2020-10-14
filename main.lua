@@ -41,6 +41,8 @@ function love.load()
     resizable = true
   })
 
+  ghighScore = 0
+  
   gStateMachine = StateMachine{
     ['title'] = function() return TitleScreenState() end,
     ['play'] = function() return PlayState() end,
