@@ -19,7 +19,7 @@ function PlayState:render()
   end
 
   love.graphics.setFont(mediumFont)
-  love.graphics.printf('Score: ' .. self.score, 0, 100, VIRTUAL_WIDTH, 'center')
+  love.graphics.printf('Score: ' .. tostring(self.score), 0, 100, VIRTUAL_WIDTH, 'center')
 
   self.bird:render()
 end
@@ -40,9 +40,11 @@ function PlayState:update(dt)
 
   -- check every entry in the pipePairs table and move each + check each pipe (upper and lower) for collision
   for k, pair in pairs(self.pipePairs) do
-    if self.bird.x > pair.pipes.lower.x + pair.pipes.lower.width and pair.pipes.lower.scored == false then
-      self.score = self.score + 1
-      pair.pipes.lower.scored = true
+    if not pair.pipes.lower.scored then
+      if self.bird.x > pair.pipes.lower.x + pair.pipes.lower.width then
+        self.score = self.score + 1
+        pair.pipes.lower.scored = true
+      end
     end
     if pair.remove then
         table.remove(self.pipePairs, k)
@@ -57,7 +59,7 @@ function PlayState:update(dt)
   for k, pair in pairs(self.pipePairs) do
     for l, pipe in pairs(pair.pipes) do
         if self.bird:collides(pipe) then
-            gStateMachine:change('title')
+            gStateMachine:change('score', {score = self.score})
         end
     end
   end
