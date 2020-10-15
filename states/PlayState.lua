@@ -19,7 +19,7 @@ function PlayState:render()
   end
 
   love.graphics.setFont(mediumFont)
-  love.graphics.printf('Score: ' .. tostring(self.score), 0, 100, VIRTUAL_WIDTH, 'center')
+  love.graphics.printf('Score: ' .. tostring(self.score), 0, 20, VIRTUAL_WIDTH, 'center')
 
   self.bird:render()
 end

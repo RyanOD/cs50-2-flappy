@@ -2,16 +2,24 @@ TitleScreenState = Class{__includes = BaseState}
 
 -- Override inherited BaseState render method to display game title and start instructions
 function TitleScreenState:render()
+  love.graphics.setFont(hugeFont)
+  love.graphics.printf('Flappy Bird', 0, 30, VIRTUAL_WIDTH, 'center')
+
   love.graphics.setFont(flappyFont)
-  love.graphics.printf('Flappy Bird', 0, 64, VIRTUAL_WIDTH, 'center')
+  love.graphics.printf('Press Enter to start', 0, 130, VIRTUAL_WIDTH, 'center')
 
   love.graphics.setFont(mediumFont)
-  love.graphics.printf('Press Enter', 0, 100, VIRTUAL_WIDTH, 'center')
+  love.graphics.printf('How to play', 0, 190, VIRTUAL_WIDTH, 'center')
+  love.graphics.setFont(smallFont)
+  love.graphics.printf('1. Use the space bar to fly', 200, 210, VIRTUAL_WIDTH, 'left')
+  love.graphics.printf('2. Avoid the pipes', 200, 220, VIRTUAL_WIDTH, 'left')
+  love.graphics.printf('3. Avoid the ground', 200, 230, VIRTUAL_WIDTH, 'left')
 end
 
 -- Override inherited BaseState update method to listen for player to start game
 function TitleScreenState:update(dt)
   if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
-    gStateMachine:change('play')
+    gStateMachine:change('countdown')
+    --gStateMachine:change('play')
   end
 end

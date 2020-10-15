@@ -13,7 +13,7 @@ function ScoreState:render()
 
   love.graphics.setFont(mediumFont)
   love.graphics.printf('Final Score: ' ..  tostring(self.score), 0, 100, VIRTUAL_WIDTH, 'center')
-  love.graphics.printf('Press enter to play again', 0, 130, VIRTUAL_WIDTH, 'center')
+  love.graphics.printf('Press enter to play again (Esc to quit)', 0, 130, VIRTUAL_WIDTH, 'center')
   love.graphics.printf('High Score: ' ..  tostring(ghighScore), 0, 200, VIRTUAL_WIDTH, 'center')
 end
 
