@@ -35,6 +35,10 @@ function PlayState:update(dt)
     self.spawnTimer = 0
   end
 
+  if self.bird.y >= VIRTUAL_HEIGHT - self.bird.height - GROUND_HEIGHT then
+    gStateMachine:change('score', {score = self.score})
+  end
+
   self.bird:render()
   self.bird:update(dt)
 
