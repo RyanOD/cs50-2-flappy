@@ -1,6 +1,7 @@
 ScoreState = Class{__includes = BaseState}
 
 function ScoreState:enter(params)
+  sounds['gameOver']:play()
   self.score = params.score
   if self.score > ghighScore then
     ghighScore = self.score

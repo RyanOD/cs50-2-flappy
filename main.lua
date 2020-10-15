@@ -36,6 +36,13 @@ function love.load()
   love.graphics.setDefaultFilter('nearest', 'nearest')
   love.window.setTitle('Flappy Bird')
 
+  sounds = {
+    ['title'] = love.audio.newSource('sounds/title.wav', 'static'),
+    ['gameOver'] = love.audio.newSource('sounds/game_over.wav', 'static')
+  }
+
+  sounds['gameOver']:setLooping(false)
+
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
     vsync = true,
     fullscreen = false,

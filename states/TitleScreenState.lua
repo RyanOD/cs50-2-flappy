@@ -1,5 +1,9 @@
 TitleScreenState = Class{__includes = BaseState}
 
+function TitleScreenState:init()
+  sounds['title']:play()
+end
+
 -- Override inherited BaseState render method to display game title and start instructions
 function TitleScreenState:render()
   love.graphics.setFont(hugeFont)
@@ -19,7 +23,7 @@ end
 -- Override inherited BaseState update method to listen for player to start game
 function TitleScreenState:update(dt)
   if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+    sounds['title']:stop()
     gStateMachine:change('countdown')
-    --gStateMachine:change('play')
   end
 end
