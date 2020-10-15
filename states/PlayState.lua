@@ -48,6 +48,7 @@ function PlayState:update(dt)
       if self.bird.x > pair.pipes.lower.x + pair.pipes.lower.width then
         self.score = self.score + 1
         pair.pipes.lower.scored = true
+        sounds['score']:play()
       end
     end
     if pair.remove then

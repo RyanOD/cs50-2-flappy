@@ -30,6 +30,7 @@ function Bird:update(dt)
   -- call to boolean wasPressed function with "space" as key
   if love.keyboard.wasPressed('space') then
     self.dy = ANTI_GRAVITY
+    sounds['whoosh']:play()
   end
 end
 

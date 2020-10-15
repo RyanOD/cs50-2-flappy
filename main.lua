@@ -37,8 +37,10 @@ function love.load()
   love.window.setTitle('Flappy Bird')
 
   sounds = {
-    ['title'] = love.audio.newSource('sounds/title.wav', 'static'),
-    ['gameOver'] = love.audio.newSource('sounds/game_over.wav', 'static')
+    ['title'] = love.audio.newSource('sounds/marios-way.mp3', 'static'),
+    ['gameOver'] = love.audio.newSource('sounds/game_over.wav', 'static'),
+    ['score'] = love.audio.newSource('sounds/score.wav', 'static'),
+    ['whoosh'] = love.audio.newSource('sounds/whoosh.wav', 'static')
   }
 
   sounds['gameOver']:setLooping(false)
