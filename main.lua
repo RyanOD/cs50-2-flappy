@@ -81,7 +81,7 @@ function love.update(dt)
     push:resize(w, h)
   end
 
-  function love.keypressed(key)
+  function love.keyPressed(key)
     -- Store keys pressed in keysPressed table as true
     love.keyboard.keysPressed[key] = true
 
@@ -91,7 +91,7 @@ function love.update(dt)
   end
 end
 
--- Function to check keysPressed table for key values
+-- Adding method to Keyboard class to check keysPressed table for key values. Note, this function is global and can be called from game states.
 function love.keyboard.wasPressed(key)
   if love.keyboard.keysPressed[key] then
     return true
